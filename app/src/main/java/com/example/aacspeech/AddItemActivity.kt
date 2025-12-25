@@ -1,7 +1,6 @@
 package com.example.aacspeech
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -14,7 +13,7 @@ class AddItemActivity : AppCompatActivity() {
     private lateinit var editText: EditText
     private lateinit var btnSave: Button
     private lateinit var btnCancel: Button
-    private var selectedColor: Int = Color.LTGRAY
+    private var selectedColor: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,12 +23,15 @@ class AddItemActivity : AppCompatActivity() {
         btnSave = findViewById(R.id.btnSave)
         btnCancel = findViewById(R.id.btnCancel)
 
+        // Set default color
+        selectedColor = ContextCompat.getColor(this, R.color.lightgray)
+
         setupColorButtons()
 
         btnSave.setOnClickListener {
             val text = editText.text.toString().trim()
             if (text.isEmpty()) {
-                Toast.makeText(this, "Please enter text", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.please_enter_text, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 

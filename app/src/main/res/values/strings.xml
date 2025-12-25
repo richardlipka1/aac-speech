@@ -9,4 +9,10 @@
     <string name="choose_color">Choose color</string>
     <string name="item_text">Item Text</string>
     <string name="background_color">Background Color</string>
+    <string name="delete_confirmation_title">Delete Item</string>
+    <string name="delete_confirmation_message">Are you sure you want to delete this item?</string>
+    <string name="item_deleted">Item deleted</string>
+    <string name="please_enter_text">Please enter text</string>
+    <string name="language_not_supported">Language not supported</string>
+    <string name="tts_init_failed">Text-to-Speech initialization failed</string>
 </resources>

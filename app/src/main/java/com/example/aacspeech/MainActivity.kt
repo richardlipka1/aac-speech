@@ -83,10 +83,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         if (status == TextToSpeech.SUCCESS) {
             val result = tts?.setLanguage(Locale.US)
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Toast.makeText(this, "Language not supported", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.language_not_supported, Toast.LENGTH_SHORT).show()
             }
         } else {
-            Toast.makeText(this, "Text-to-Speech initialization failed", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.tts_init_failed, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -96,12 +96,12 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun showDeleteConfirmation(item: GridItem) {
         AlertDialog.Builder(this)
-            .setTitle("Delete Item")
-            .setMessage("Are you sure you want to delete this item?")
-            .setPositiveButton("Delete") { _, _ ->
+            .setTitle(R.string.delete_confirmation_title)
+            .setMessage(R.string.delete_confirmation_message)
+            .setPositiveButton(R.string.delete) { _, _ ->
                 deleteItem(item)
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 
@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         items.removeIf { it.id == item.id }
         adapter.updateItems(items)
         saveItems()
-        Toast.makeText(this, "Item deleted", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.item_deleted, Toast.LENGTH_SHORT).show()
     }
 
     private fun loadItems() {
