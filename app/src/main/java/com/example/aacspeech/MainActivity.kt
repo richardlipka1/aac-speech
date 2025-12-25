@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.widget.GridView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -24,7 +25,25 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     companion object {
         const val PREFS_NAME = "AACSpeechPrefs"
         const val ITEMS_KEY = "items"
-        const val REQUEST_ADD_ITEM = 1
+    }
+
+    private val addItemLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            result.data?.let { data ->
+                val text = data.getStringExtra("text") ?: return@let
+                val color = data.getIntExtra("color", 0)
+                val newItem = GridItem(
+                    id = UUID.randomUUID().toString(),
+                    text = text,
+                    backgroundColor = color
+                )
+                items.add(newItem)
+                adapter.updateItems(items)
+                saveItems()
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +75,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         // Setup FAB click listener
         fabAdd.setOnClickListener {
             val intent = Intent(this, AddItemActivity::class.java)
-            startActivityForResult(intent, REQUEST_ADD_ITEM)
+            addItemLauncher.launch(intent)
         }
     }
 
@@ -91,24 +110,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         adapter.updateItems(items)
         saveItems()
         Toast.makeText(this, "Item deleted", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_ADD_ITEM && resultCode == RESULT_OK) {
-            data?.let {
-                val text = it.getStringExtra("text") ?: return
-                val color = it.getIntExtra("color", 0)
-                val newItem = GridItem(
-                    id = UUID.randomUUID().toString(),
-                    text = text,
-                    backgroundColor = color
-                )
-                items.add(newItem)
-                adapter.updateItems(items)
-                saveItems()
-            }
-        }
     }
 
     private fun loadItems() {
