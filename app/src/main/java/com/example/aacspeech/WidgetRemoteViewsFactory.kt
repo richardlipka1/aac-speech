@@ -67,8 +67,8 @@ class WidgetRemoteViewsFactory(
     override fun hasStableIds(): Boolean = true
 
     private fun loadItems() {
-        val prefs = context.getSharedPreferences(MainActivity.PREFS_NAME, Context.MODE_PRIVATE)
-        val json = prefs.getString(MainActivity.ITEMS_KEY, null)
+        val prefs = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE)
+        val json = prefs.getString(Constants.ITEMS_KEY, null)
         if (json != null) {
             val type = object : TypeToken<MutableList<GridItem>>() {}.type
             val loadedItems: MutableList<GridItem>? = gson.fromJson(json, type)
@@ -78,7 +78,7 @@ class WidgetRemoteViewsFactory(
     }
 
     private fun loadLanguagePreference() {
-        val prefs = context.getSharedPreferences(MainActivity.PREFS_NAME, Context.MODE_PRIVATE)
-        selectedLanguage = prefs.getString(MainActivity.LANGUAGE_KEY, "en") ?: "en"
+        val prefs = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE)
+        selectedLanguage = prefs.getString(Constants.LANGUAGE_KEY, "en") ?: "en"
     }
 }

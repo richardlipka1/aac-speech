@@ -17,8 +17,6 @@ class WidgetTTSService : Service(), TextToSpeech.OnInitListener {
 
     companion object {
         const val EXTRA_TEXT = "extra_text"
-        const val PREFS_NAME = "AACSpeechPrefs"
-        const val LANGUAGE_KEY = "selected_language"
     }
 
     override fun onCreate() {
@@ -71,8 +69,8 @@ class WidgetTTSService : Service(), TextToSpeech.OnInitListener {
     }
 
     private fun loadLanguagePreference() {
-        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        selectedLanguage = prefs.getString(LANGUAGE_KEY, "en") ?: "en"
+        val prefs = getSharedPreferences(Constants.PREFS_NAME, MODE_PRIVATE)
+        selectedLanguage = prefs.getString(Constants.LANGUAGE_KEY, "en") ?: "en"
     }
 
     private fun getLocaleForLanguage(language: String): Locale {

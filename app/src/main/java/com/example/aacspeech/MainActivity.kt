@@ -26,10 +26,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var selectedLanguage: String = "en"
 
     companion object {
-        const val PREFS_NAME = "AACSpeechPrefs"
-        const val ITEMS_KEY = "items"
-        const val LANGUAGE_KEY = "selected_language"
-        const val FIRST_LAUNCH_KEY = "first_launch"
+        // For backward compatibility
+        const val PREFS_NAME = Constants.PREFS_NAME
+        const val ITEMS_KEY = Constants.ITEMS_KEY
+        const val LANGUAGE_KEY = Constants.LANGUAGE_KEY
     }
 
     private val addItemLauncher = registerForActivityResult(
@@ -68,11 +68,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         // Initialize TextToSpeech
         tts = TextToSpeech(this, this)
 
-        // Check if this is first launch and add predefined words
-        checkAndAddPredefinedWords()
-
         // Load saved items
         loadItems()
+
+        // Check if this is first launch and add predefined words
+        checkAndAddPredefinedWords()
 
         // Setup adapter
         adapter = GridItemAdapter(
@@ -130,8 +130,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun loadItems() {
-        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        val json = prefs.getString(ITEMS_KEY, null)
+        val prefs = getSharedPreferences(Constants.PREFS_NAME, MODE_PRIVATE)
+        val json = prefs.getString(Constants.ITEMS_KEY, null)
         if (json != null) {
             val type = object : TypeToken<MutableList<GridItem>>() {}.type
             items = gson.fromJson(json, type) ?: mutableListOf()
@@ -139,9 +139,9 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun saveItems() {
-        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        val prefs = getSharedPreferences(Constants.PREFS_NAME, MODE_PRIVATE)
         val json = gson.toJson(items)
-        prefs.edit().putString(ITEMS_KEY, json).apply()
+        prefs.edit().putString(Constants.ITEMS_KEY, json).apply()
         
         // Notify all widgets to update
         updateWidgets()
@@ -156,8 +156,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun loadLanguagePreference() {
-        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        selectedLanguage = prefs.getString(LANGUAGE_KEY, "en") ?: "en"
+        val prefs = getSharedPreferences(Constants.PREFS_NAME, MODE_PRIVATE)
+        selectedLanguage = prefs.getString(Constants.LANGUAGE_KEY, "en") ?: "en"
     }
 
     private fun getLocaleForLanguage(language: String): Locale {
@@ -169,12 +169,12 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun checkAndAddPredefinedWords() {
-        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        val isFirstLaunch = prefs.getBoolean(FIRST_LAUNCH_KEY, true)
+        val prefs = getSharedPreferences(Constants.PREFS_NAME, MODE_PRIVATE)
+        val isFirstLaunch = prefs.getBoolean(Constants.FIRST_LAUNCH_KEY, true)
         
         if (isFirstLaunch) {
             addPredefinedWords()
-            prefs.edit().putBoolean(FIRST_LAUNCH_KEY, false).apply()
+            prefs.edit().putBoolean(Constants.FIRST_LAUNCH_KEY, false).apply()
         }
     }
 
