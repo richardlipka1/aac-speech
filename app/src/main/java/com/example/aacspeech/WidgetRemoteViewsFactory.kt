@@ -67,7 +67,9 @@ class WidgetRemoteViewsFactory(
         val json = prefs.getString(MainActivity.ITEMS_KEY, null)
         if (json != null) {
             val type = object : TypeToken<MutableList<GridItem>>() {}.type
-            items = gson.fromJson(json, type) ?: mutableListOf()
+            val loadedItems: MutableList<GridItem>? = gson.fromJson(json, type)
+            items.clear()
+            loadedItems?.let { items.addAll(it) }
         }
     }
 }
