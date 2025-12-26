@@ -19,12 +19,15 @@ class WidgetRemoteViewsFactory(
     )
     private var items = mutableListOf<GridItem>()
     private val gson = Gson()
+    private var selectedLanguage: String = "en"
 
     override fun onCreate() {
+        loadLanguagePreference()
         loadItems()
     }
 
     override fun onDataSetChanged() {
+        loadLanguagePreference()
         loadItems()
     }
 
@@ -42,12 +45,13 @@ class WidgetRemoteViewsFactory(
         val item = items[position]
         val views = RemoteViews(context.packageName, R.layout.widget_grid_item)
         
-        views.setTextViewText(R.id.widgetItemText, item.text)
+        val displayText = item.getTextForLanguage(selectedLanguage)
+        views.setTextViewText(R.id.widgetItemText, displayText)
         views.setInt(R.id.widgetItemContainer, "setBackgroundColor", item.backgroundColor)
 
         // Intent for item click to trigger TTS
         val fillInIntent = Intent().apply {
-            putExtra(WidgetTTSService.EXTRA_TEXT, item.text)
+            putExtra(WidgetTTSService.EXTRA_TEXT, displayText)
         }
         views.setOnClickFillInIntent(R.id.widgetItemContainer, fillInIntent)
 
@@ -63,13 +67,18 @@ class WidgetRemoteViewsFactory(
     override fun hasStableIds(): Boolean = true
 
     private fun loadItems() {
-        val prefs = context.getSharedPreferences(MainActivity.PREFS_NAME, Context.MODE_PRIVATE)
-        val json = prefs.getString(MainActivity.ITEMS_KEY, null)
+        val prefs = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE)
+        val json = prefs.getString(Constants.ITEMS_KEY, null)
         if (json != null) {
             val type = object : TypeToken<MutableList<GridItem>>() {}.type
             val loadedItems: MutableList<GridItem>? = gson.fromJson(json, type)
             items.clear()
             loadedItems?.let { items.addAll(it) }
         }
+    }
+
+    private fun loadLanguagePreference() {
+        val prefs = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE)
+        selectedLanguage = prefs.getString(Constants.LANGUAGE_KEY, "en") ?: "en"
     }
 }

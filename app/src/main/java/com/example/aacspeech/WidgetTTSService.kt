@@ -13,6 +13,7 @@ class WidgetTTSService : Service(), TextToSpeech.OnInitListener {
     private var tts: TextToSpeech? = null
     private var ttsInitialized = false
     private val pendingTexts = mutableListOf<String>()
+    private var selectedLanguage: String = "en"
 
     companion object {
         const val EXTRA_TEXT = "extra_text"
@@ -20,6 +21,7 @@ class WidgetTTSService : Service(), TextToSpeech.OnInitListener {
 
     override fun onCreate() {
         super.onCreate()
+        loadLanguagePreference()
         tts = TextToSpeech(this, this)
     }
 
@@ -40,7 +42,8 @@ class WidgetTTSService : Service(), TextToSpeech.OnInitListener {
         Log.d("WidgetTTSService", "TTS initialized successfully (status=$status)")
 
         if (status == TextToSpeech.SUCCESS) {
-            val result = tts?.setLanguage(Locale.US)
+            val locale = Constants.getLocaleForLanguage(selectedLanguage)
+            val result = tts?.setLanguage(locale)
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 // Language not supported, cleanup
                 ttsInitialized = false
@@ -63,6 +66,11 @@ class WidgetTTSService : Service(), TextToSpeech.OnInitListener {
 
     private fun speakText(text: String) {
         tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+    private fun loadLanguagePreference() {
+        val prefs = getSharedPreferences(Constants.PREFS_NAME, MODE_PRIVATE)
+        selectedLanguage = prefs.getString(Constants.LANGUAGE_KEY, "en") ?: "en"
     }
 
     override fun onDestroy() {

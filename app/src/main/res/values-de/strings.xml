@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AAC Speech</string>
+    <string name="add_item">Element hinzufügen</string>
+    <string name="delete">Löschen</string>
+    <string name="save">Speichern</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="enter_text">Text eingeben</string>
+    <string name="choose_color">Farbe wählen</string>
+    <string name="item_text">Elementtext</string>
+    <string name="background_color">Hintergrundfarbe</string>
+    <string name="delete_confirmation_title">Element löschen</string>
+    <string name="delete_confirmation_message">Möchten Sie dieses Element wirklich löschen?</string>
+    <string name="item_deleted">Element gelöscht</string>
+    <string name="please_enter_text">Bitte geben Sie einen Text ein</string>
+    <string name="language_not_supported">Sprache nicht unterstützt</string>
+    <string name="tts_init_failed">Text-zu-Sprache-Initialisierung fehlgeschlagen</string>
+    <string name="widget_description">AAC Speech Raster-Widget</string>
+    <string name="widget_empty_text">Noch keine Elemente.\nÖffnen Sie die App, um Elemente hinzuzufügen.</string>
+    <string name="widget_config_title">Widget konfigurieren</string>
+    <string name="number_of_columns">Anzahl der Spalten:</string>
+    <string name="language_settings">Spracheinstellungen</string>
+    <string name="select_language">Sprache auswählen</string>
+    <string name="english">Englisch</string>
+    <string name="spanish">Spanisch</string>
+    <string name="german">Deutsch</string>
+</resources>

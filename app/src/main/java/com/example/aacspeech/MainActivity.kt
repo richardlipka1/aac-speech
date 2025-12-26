@@ -23,11 +23,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var items = mutableListOf<GridItem>()
     private var tts: TextToSpeech? = null
     private val gson = Gson()
-
-    companion object {
-        const val PREFS_NAME = "AACSpeechPrefs"
-        const val ITEMS_KEY = "items"
-    }
+    private var selectedLanguage: String = "en"
 
     private val addItemLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -39,10 +35,14 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 val newItem = GridItem(
                     id = UUID.randomUUID().toString(),
                     text = text,
-                    backgroundColor = color
+                    backgroundColor = color,
+                    textEn = text,
+                    textEs = text,
+                    textDe = text
                 )
                 items.add(newItem)
                 adapter.updateItems(items)
+                adapter.setLanguage(selectedLanguage)
                 saveItems()
             }
         }
@@ -55,22 +55,29 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         gridView = findViewById(R.id.gridView)
         fabAdd = findViewById(R.id.fabAdd)
 
+        // Load language preference (default to English)
+        loadLanguagePreference()
+
         // Initialize TextToSpeech
         tts = TextToSpeech(this, this)
 
         // Load saved items
         loadItems()
 
+        // Check if this is first launch and add predefined words
+        checkAndAddPredefinedWords()
+
         // Setup adapter
         adapter = GridItemAdapter(
             this,
             items,
             onItemClick = { item ->
-                speakText(item.text)
+                speakText(item.getTextForLanguage(selectedLanguage))
             },
             onDeleteClick = { item ->
                 showDeleteConfirmation(item)
-            }
+            },
+            currentLanguage = selectedLanguage
         )
         gridView.adapter = adapter
 
@@ -83,7 +90,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
-            val result = tts?.setLanguage(Locale.US)
+            val locale = Constants.getLocaleForLanguage(selectedLanguage)
+            val result = tts?.setLanguage(locale)
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 Toast.makeText(this, R.string.language_not_supported, Toast.LENGTH_SHORT).show()
             }
@@ -115,8 +123,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun loadItems() {
-        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        val json = prefs.getString(ITEMS_KEY, null)
+        val prefs = getSharedPreferences(Constants.PREFS_NAME, MODE_PRIVATE)
+        val json = prefs.getString(Constants.ITEMS_KEY, null)
         if (json != null) {
             val type = object : TypeToken<MutableList<GridItem>>() {}.type
             items = gson.fromJson(json, type) ?: mutableListOf()
@@ -124,9 +132,9 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun saveItems() {
-        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        val prefs = getSharedPreferences(Constants.PREFS_NAME, MODE_PRIVATE)
         val json = gson.toJson(items)
-        prefs.edit().putString(ITEMS_KEY, json).apply()
+        prefs.edit().putString(Constants.ITEMS_KEY, json).apply()
         
         // Notify all widgets to update
         updateWidgets()
@@ -138,6 +146,69 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             ComponentName(this, AppWidget::class.java)
         )
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetGridView)
+    }
+
+    private fun loadLanguagePreference() {
+        val prefs = getSharedPreferences(Constants.PREFS_NAME, MODE_PRIVATE)
+        selectedLanguage = prefs.getString(Constants.LANGUAGE_KEY, "en") ?: "en"
+    }
+
+    private fun checkAndAddPredefinedWords() {
+        val prefs = getSharedPreferences(Constants.PREFS_NAME, MODE_PRIVATE)
+        val isFirstLaunch = prefs.getBoolean(Constants.FIRST_LAUNCH_KEY, true)
+        
+        if (isFirstLaunch) {
+            addPredefinedWords()
+            prefs.edit().putBoolean(Constants.FIRST_LAUNCH_KEY, false).apply()
+        }
+    }
+
+    private fun addPredefinedWords() {
+        val predefinedWords = listOf(
+            GridItem(
+                id = UUID.randomUUID().toString(),
+                text = "Hello",
+                backgroundColor = android.graphics.Color.parseColor("#90CAF9"),
+                textEn = "Hello",
+                textEs = "Hola",
+                textDe = "Hallo"
+            ),
+            GridItem(
+                id = UUID.randomUUID().toString(),
+                text = "Bye",
+                backgroundColor = android.graphics.Color.parseColor("#CE93D8"),
+                textEn = "Bye",
+                textEs = "Adiós",
+                textDe = "Tschüss"
+            ),
+            GridItem(
+                id = UUID.randomUUID().toString(),
+                text = "Yes",
+                backgroundColor = android.graphics.Color.parseColor("#A5D6A7"),
+                textEn = "Yes",
+                textEs = "Sí",
+                textDe = "Ja"
+            ),
+            GridItem(
+                id = UUID.randomUUID().toString(),
+                text = "No",
+                backgroundColor = android.graphics.Color.parseColor("#EF9A9A"),
+                textEn = "No",
+                textEs = "No",
+                textDe = "Nein"
+            ),
+            GridItem(
+                id = UUID.randomUUID().toString(),
+                text = "How are you",
+                backgroundColor = android.graphics.Color.parseColor("#FFF59D"),
+                textEn = "How are you",
+                textEs = "¿Cómo estás?",
+                textDe = "Wie geht es dir?"
+            )
+        )
+        
+        items.addAll(predefinedWords)
+        saveItems()
     }
 
     override fun onDestroy() {

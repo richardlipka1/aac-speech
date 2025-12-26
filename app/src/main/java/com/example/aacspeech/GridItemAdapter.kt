@@ -14,7 +14,8 @@ class GridItemAdapter(
     private val context: Context,
     private var items: MutableList<GridItem>,
     private val onItemClick: (GridItem) -> Unit,
-    private val onDeleteClick: (GridItem) -> Unit
+    private val onDeleteClick: (GridItem) -> Unit,
+    private var currentLanguage: String = "en"
 ) : BaseAdapter() {
 
     override fun getCount(): Int = items.size
@@ -41,7 +42,7 @@ class GridItemAdapter(
         }
 
         val item = items[position]
-        holder.itemText.text = item.text
+        holder.itemText.text = item.getTextForLanguage(currentLanguage)
         holder.itemContainer.setBackgroundColor(item.backgroundColor)
 
         holder.itemContainer.setOnClickListener {
@@ -58,6 +59,11 @@ class GridItemAdapter(
 
     fun updateItems(newItems: MutableList<GridItem>) {
         items = newItems
+        notifyDataSetChanged()
+    }
+
+    fun setLanguage(language: String) {
+        currentLanguage = language
         notifyDataSetChanged()
     }
 

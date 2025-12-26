@@ -19,4 +19,9 @@
     <string name="widget_empty_text">No items yet.\nOpen the app to add items.</string>
     <string name="widget_config_title">Configure Widget</string>
     <string name="number_of_columns">Number of columns:</string>
+    <string name="language_settings">Language Settings</string>
+    <string name="select_language">Select Language</string>
+    <string name="english">English</string>
+    <string name="spanish">Spanish</string>
+    <string name="german">German</string>
 </resources>
