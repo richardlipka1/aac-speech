@@ -45,9 +45,9 @@ class WidgetRemoteViewsFactory(
         views.setTextViewText(R.id.widgetItemText, item.text)
         views.setInt(R.id.widgetItemContainer, "setBackgroundColor", item.backgroundColor)
 
-        // Intent for item click
+        // Intent for item click to trigger TTS
         val fillInIntent = Intent().apply {
-            putExtra("item_text", item.text)
+            putExtra(WidgetTTSService.EXTRA_TEXT, item.text)
         }
         views.setOnClickFillInIntent(R.id.widgetItemContainer, fillInIntent)
 

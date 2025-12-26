@@ -62,13 +62,13 @@ class AppWidget : AppWidgetProvider() {
                 setEmptyView(R.id.widgetGridView, R.id.emptyView)
             }
 
-            // Intent to launch main activity when grid item is clicked
-            val clickIntent = Intent(context, MainActivity::class.java)
-            val clickPendingIntent = PendingIntent.getActivity(
-                context, 0, clickIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            // Intent to trigger TTS when grid item is clicked
+            val ttsIntent = Intent(context, WidgetTTSService::class.java)
+            val ttsPendingIntent = PendingIntent.getService(
+                context, 0, ttsIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
             )
-            views.setPendingIntentTemplate(R.id.widgetGridView, clickPendingIntent)
+            views.setPendingIntentTemplate(R.id.widgetGridView, ttsPendingIntent)
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetGridView)
