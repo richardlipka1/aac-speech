@@ -1,6 +1,7 @@
 package com.example.aacspeech
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +45,7 @@ class GridItemAdapter(
         holder.itemContainer.setBackgroundColor(item.backgroundColor)
 
         holder.itemContainer.setOnClickListener {
+            Log.d("GridItemAdapter", "Item clicked: ${item.text}")
             onItemClick(item)
         }
 
