@@ -25,13 +25,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private val gson = Gson()
     private var selectedLanguage: String = "en"
 
-    companion object {
-        // For backward compatibility
-        const val PREFS_NAME = Constants.PREFS_NAME
-        const val ITEMS_KEY = Constants.ITEMS_KEY
-        const val LANGUAGE_KEY = Constants.LANGUAGE_KEY
-    }
-
     private val addItemLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
