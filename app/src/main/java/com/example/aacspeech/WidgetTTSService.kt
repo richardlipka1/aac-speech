@@ -34,13 +34,23 @@ class WidgetTTSService : Service(), TextToSpeech.OnInitListener {
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
-            tts?.setLanguage(Locale.US)
+            val result = tts?.setLanguage(Locale.US)
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                // Language not supported, cleanup
+                ttsInitialized = false
+                pendingTexts.clear()
+                return
+            }
             ttsInitialized = true
             
             // Speak any pending texts
             pendingTexts.forEach { text ->
                 speakText(text)
             }
+            pendingTexts.clear()
+        } else {
+            // TTS initialization failed, cleanup pending texts
+            ttsInitialized = false
             pendingTexts.clear()
         }
     }
