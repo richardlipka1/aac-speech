@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
-            val locale = getLocaleForLanguage(selectedLanguage)
+            val locale = Constants.getLocaleForLanguage(selectedLanguage)
             val result = tts?.setLanguage(locale)
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 Toast.makeText(this, R.string.language_not_supported, Toast.LENGTH_SHORT).show()
@@ -151,14 +151,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun loadLanguagePreference() {
         val prefs = getSharedPreferences(Constants.PREFS_NAME, MODE_PRIVATE)
         selectedLanguage = prefs.getString(Constants.LANGUAGE_KEY, "en") ?: "en"
-    }
-
-    private fun getLocaleForLanguage(language: String): Locale {
-        return when (language) {
-            "es" -> Locale("es")
-            "de" -> Locale("de")
-            else -> Locale.ENGLISH
-        }
     }
 
     private fun checkAndAddPredefinedWords() {

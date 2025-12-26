@@ -42,7 +42,7 @@ class WidgetTTSService : Service(), TextToSpeech.OnInitListener {
         Log.d("WidgetTTSService", "TTS initialized successfully (status=$status)")
 
         if (status == TextToSpeech.SUCCESS) {
-            val locale = getLocaleForLanguage(selectedLanguage)
+            val locale = Constants.getLocaleForLanguage(selectedLanguage)
             val result = tts?.setLanguage(locale)
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 // Language not supported, cleanup
@@ -71,14 +71,6 @@ class WidgetTTSService : Service(), TextToSpeech.OnInitListener {
     private fun loadLanguagePreference() {
         val prefs = getSharedPreferences(Constants.PREFS_NAME, MODE_PRIVATE)
         selectedLanguage = prefs.getString(Constants.LANGUAGE_KEY, "en") ?: "en"
-    }
-
-    private fun getLocaleForLanguage(language: String): Locale {
-        return when (language) {
-            "es" -> Locale("es")
-            "de" -> Locale("de")
-            else -> Locale.ENGLISH
-        }
     }
 
     override fun onDestroy() {
