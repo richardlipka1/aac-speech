@@ -4,6 +4,8 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.speech.tts.TextToSpeech
+import android.util.Log
+import android.webkit.ConsoleMessage
 import java.util.*
 
 class WidgetTTSService : Service(), TextToSpeech.OnInitListener {
@@ -22,6 +24,8 @@ class WidgetTTSService : Service(), TextToSpeech.OnInitListener {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.d("WidgetTTSService", "TTS initialized successfully (status=$startId)")
+
         intent?.getStringExtra(EXTRA_TEXT)?.let { text ->
             if (ttsInitialized) {
                 speakText(text)
@@ -33,6 +37,8 @@ class WidgetTTSService : Service(), TextToSpeech.OnInitListener {
     }
 
     override fun onInit(status: Int) {
+        Log.d("WidgetTTSService", "TTS initialized successfully (status=$status)")
+
         if (status == TextToSpeech.SUCCESS) {
             val result = tts?.setLanguage(Locale.US)
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {

@@ -7,18 +7,36 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.RemoteViews
+import kotlin.or
 
 class AppWidget : AppWidgetProvider() {
-
+    // In your AppWidgetProvider class
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
         for (appWidgetId in appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId)
+            val views = RemoteViews(context.packageName, R.layout.widget_layout_2col)
+
+            // Set up the intent that points to the RemoteViewsService
+            val intent = Intent(context, WidgetRemoteViewsService::class.java)
+            views.setRemoteAdapter(R.id.widgetGridView, intent)
+
+            // **CRITICAL: Set the PendingIntent template for item clicks**
+            val clickIntent = Intent(context, WidgetTTSService::class.java)
+            val clickPendingIntent = PendingIntent.getService(
+                context,
+                0,
+                clickIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            )
+            views.setPendingIntentTemplate(R.id.widgetGridView, clickPendingIntent)
+
+            appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }
+
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         for (appWidgetId in appWidgetIds) {
@@ -41,7 +59,7 @@ class AppWidget : AppWidgetProvider() {
             appWidgetId: Int
         ) {
             val columnCount = WidgetConfigActivity.loadColumnPref(context, appWidgetId)
-            
+
             val intent = Intent(context, WidgetRemoteViewsService::class.java).apply {
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
                 data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
