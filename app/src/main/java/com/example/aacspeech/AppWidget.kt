@@ -66,7 +66,7 @@ class AppWidget : AppWidgetProvider() {
             val ttsIntent = Intent(context, WidgetTTSService::class.java)
             val ttsPendingIntent = PendingIntent.getService(
                 context, 0, ttsIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             views.setPendingIntentTemplate(R.id.widgetGridView, ttsPendingIntent)
 

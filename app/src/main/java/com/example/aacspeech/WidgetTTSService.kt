@@ -29,7 +29,7 @@ class WidgetTTSService : Service(), TextToSpeech.OnInitListener {
                 pendingTexts.add(text)
             }
         }
-        return START_NOT_STICKY
+        return START_REDELIVER_INTENT
     }
 
     override fun onInit(status: Int) {
@@ -43,11 +43,11 @@ class WidgetTTSService : Service(), TextToSpeech.OnInitListener {
             }
             ttsInitialized = true
             
-            // Speak any pending texts
-            pendingTexts.forEach { text ->
-                speakText(text)
+            // Speak the most recent pending text (if any)
+            if (pendingTexts.isNotEmpty()) {
+                speakText(pendingTexts.last())
+                pendingTexts.clear()
             }
-            pendingTexts.clear()
         } else {
             // TTS initialization failed, cleanup pending texts
             ttsInitialized = false
