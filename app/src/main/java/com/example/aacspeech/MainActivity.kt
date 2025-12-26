@@ -12,6 +12,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.*
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 
 class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
@@ -125,6 +127,17 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         val json = gson.toJson(items)
         prefs.edit().putString(ITEMS_KEY, json).apply()
+        
+        // Notify all widgets to update
+        updateWidgets()
+    }
+
+    private fun updateWidgets() {
+        val appWidgetManager = AppWidgetManager.getInstance(this)
+        val appWidgetIds = appWidgetManager.getAppWidgetIds(
+            ComponentName(this, AppWidget::class.java)
+        )
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetGridView)
     }
 
     override fun onDestroy() {
