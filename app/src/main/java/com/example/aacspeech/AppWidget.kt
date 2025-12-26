@@ -50,11 +50,11 @@ class AppWidget : AppWidgetProvider() {
             // Select the appropriate layout based on column count
             val layoutId = when (columnCount) {
                 1 -> R.layout.widget_layout_1col
-                2 -> R.layout.widget_layout
+                2 -> R.layout.widget_layout_2col
                 3 -> R.layout.widget_layout_3col
                 4 -> R.layout.widget_layout_4col
                 5 -> R.layout.widget_layout_5col
-                else -> R.layout.widget_layout
+                else -> R.layout.widget_layout_2col
             }
 
             val views = RemoteViews(context.packageName, layoutId).apply {

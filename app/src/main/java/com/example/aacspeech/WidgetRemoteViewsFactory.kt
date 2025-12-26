@@ -3,7 +3,6 @@ package com.example.aacspeech
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.speech.tts.TextToSpeech
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import com.google.gson.Gson
