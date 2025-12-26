@@ -42,10 +42,14 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 val newItem = GridItem(
                     id = UUID.randomUUID().toString(),
                     text = text,
-                    backgroundColor = color
+                    backgroundColor = color,
+                    textEn = text,
+                    textEs = text,
+                    textDe = text
                 )
                 items.add(newItem)
                 adapter.updateItems(items)
+                adapter.setLanguage(selectedLanguage)
                 saveItems()
             }
         }
