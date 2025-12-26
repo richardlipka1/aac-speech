@@ -5,6 +5,7 @@ An Android application for Augmentative and Alternative Communication (AAC) that
 ## Features
 
 - **Grid View Widget**: Display words and sentences in a customizable grid layout
+- **Homescreen Widget**: Add AAC Speech grid widgets to your homescreen with configurable column count
 - **Add Items**: Add new words or sentences with custom background colors
 - **Text-to-Speech**: Tap any grid item to hear it spoken aloud
 - **Color Customization**: Choose from 8 different colors for each grid item
@@ -25,6 +26,14 @@ An Android application for Augmentative and Alternative Communication (AAC) that
 3. **Deleting Items**:
    - Tap the delete icon (trash can) in the top-right corner of any grid item
    - Confirm the deletion in the dialog that appears
+
+4. **Adding Homescreen Widget**:
+   - Long-press on your Android homescreen
+   - Select "Widgets" from the menu
+   - Find "AAC Speech" widget and drag it to your homescreen
+   - Configure the number of columns (1-5) for the widget grid
+   - Tap "Save" to add the widget
+   - The widget will display all items from the app and automatically update when items are added or removed
 
 ## Building the App
 
